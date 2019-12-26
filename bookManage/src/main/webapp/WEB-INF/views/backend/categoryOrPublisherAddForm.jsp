@@ -32,12 +32,7 @@
 								<div class="card-body">
 									<div class="chart-area">
 										<div class="row">
-											<div class="col-lg-6">
-												<a href="#" class="btn btn-success btn-icon-split"> <span
-													class="icon text-white-50"> <i class="fas fa-check"></i>
-												</span> <span class="text">Split Button Success</span>
-												</a>
-											</div>
+											<div class="col-lg-6" id="categorySection"></div>
 											<div class="col-lg-6">
 												<div class="card shadow mb-4">
 													<div class="card-header py-3">
@@ -51,12 +46,12 @@
 															</div>
 															<div class="col-sm-6 mb-3 mb-sm-0">
 																<input type="text"
-																	class="form-control form-control-user" id=""
-																	placeholder="카테고리명">
+																	class="form-control form-control-user"
+																	id="inputCategoryName" placeholder="카테고리명">
 															</div>
 															<div class="col-sm-4 mb-3 mb-sm-0">
-																<button type="button" class="btn btn-primary">카테고리
-																	등록</button>
+																<button id="btnAddCategory" type="button"
+																	class="btn btn-primary">카테고리 등록</button>
 															</div>
 														</div>
 													</div>
@@ -76,12 +71,7 @@
 								<div class="card-body">
 									<div class="chart-area">
 										<div class="row">
-											<div class="col-lg-6">
-												<a href="#" class="btn btn-success btn-icon-split"> <span
-													class="icon text-white-50"> <i class="fas fa-check"></i>
-												</span> <span class="text">Split Button Success</span>
-												</a>
-											</div>
+											<div class="col-lg-6" id="publisherSection"></div>
 											<div class="col-lg-6">
 												<div class="card shadow mb-4">
 													<div class="card-header py-3">
@@ -94,12 +84,12 @@
 															</div>
 															<div class="col-sm-6 mb-3 mb-sm-0">
 																<input type="text"
-																	class="form-control form-control-user" id=""
-																	placeholder="출판사명">
+																	class="form-control form-control-user"
+																	id="inputPublisherName" placeholder="출판사명">
 															</div>
 															<div class="col-sm-4 mb-3 mb-sm-0">
-																<button type="button" class="btn btn-primary">출판사
-																	등록</button>
+																<button id="btnAddPublisher" type="button"
+																	class="btn btn-primary">출판사 등록</button>
 															</div>
 														</div>
 													</div>
@@ -121,9 +111,176 @@
 		</div>
 		<!-- End of Content Wrapper -->
 	</div>
+	<!-- The Modal -->
+	<div class="modal fade" id="updateModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title" id="modalHead"></h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="usr"><span id="nowUpdate"></span>를 수정합니다.</label> <input
+							type="text" class="form-control"
+							id="inputUpdateCategoryOrPublisher">
+					</div>
+					<input type="hidden" id="nowUpdateUrl" value="" /> <input
+						type="hidden" id="nowUpdateIdx" value="" />
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" id="btnUpdateCategoryOrPublisherExecute"
+						class="btn btn-danger">수정 완료</button>
+					<button type="button" id="btnUpdateCencel" class="btn btn-danger" data-dismiss="modal">닫
+						기</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- End of Page Wrapper -->
 	<%@include file="include/scrollButton.jsp"%>
 	<%@include file="include/script.jsp"%>
+	<script>
+		$(document).ready(function(){
+			$("#btnAddCategory").click(function(){
+				btnAddCategoryOrPublisherExecute('inputCategoryName','카테고리','./category/addCategory');
+			});
+			
+			$("#btnAddPublisher").click(function(){
+				btnAddCategoryOrPublisherExecute('inputPublisherName','출판사','./publisher/addPublisher');
+			});
+			
+			$("#btnUpdateCategoryOrPublisherExecute").click(function(){
+				btnUpdateCategoryOrPublisherExecute();
+			});
+		});
+		
+		function loadCategory(){
+			$.ajax({
+				url : "./category/selectCategory",
+				dataType : "json",
+				success : function(data){
+					var categorySection = '';
+					for(var i =0;i<data.length;i++)
+					{
+						categorySection += '<div class="btn btn-success btn-icon-split ml-2 mb-2">';
+						categorySection += '<span class="icon text-white-50" data-toggle="modal" data-target="#updateModal" onclick="updateCategoryOrPublisher(\'카테고리\',\'./category/updateCategory\','+data[i].categoryIdx+',\''+data[i].categoryName+'\')">수 정</span>';
+						categorySection += '<span class="icon text-white-50" onclick="deleteCategoryOrPublisher(\'카테고리\',\''+data[i].categoryName+'\',\'./category/deleteCategory\','+data[i].categoryIdx+')">삭 제</span>';
+						categorySection += '<span class="text">'+data[i].categoryName+'</span></div>';
+					}
+					$("#categorySection").html(categorySection);
+				}
+			});
+		}
+		
+		function loadPublisher(){
+			$.ajax({
+				url : "./publisher/selectPublisher",
+				dataType : "json",
+				success : function(data){
+					var publisherSection = '';
+					for(var i =0;i<data.length;i++)
+					{
+						publisherSection += '<div class="btn btn-success btn-icon-split ml-2 mb-2">';
+						publisherSection += '<span class="icon text-white-50" data-toggle="modal" data-target="#updateModal" onclick="updateCategoryOrPublisher(\'출판사\',\'./publisher/updatePublisher\','+data[i].publisherIdx+',\''+data[i].publisherName+'\')">수 정</span>';
+						publisherSection += '<span class="icon text-white-50" onclick="deleteCategoryOrPublisher(\'출판사\',\''+data[i].publisherName+'\',\'./publisher/deletePublisher\','+data[i].publisherIdx+')">삭 제</span>';
+						publisherSection += '<span class="text">'+data[i].publisherName+'</span></div>';
+					}
+					$("#publisherSection").html(publisherSection);
+				}
+			});
+		}
+		
+		function deleteCategoryOrPublisher(type,name,url,idx)
+		{
+			if(confirm("정말 [" + name + "] " + type + "를 삭제하시겠습니까?"))
+			{
+				$.ajax({
+					url : url,
+					data : {
+						idx : idx
+					},
+					success : function(data){
+						alert(data);
+						loadCategory();
+						loadPublisher();
+					}
+				});
+			}
+		}
+		
+		//Modal update part
+		function updateCategoryOrPublisher(type,url,idx,nowUpdate){
+			$("#modalHead").text(type+"를 수정합니다.");
+			$("#nowUpdateUrl").val(url);
+			$("#nowUpdateIdx").val(idx);
+			$("#nowUpdate").text(nowUpdate);
+			$("#inputUpdateCategoryOrPublisher").val('');
+		}
+		
+		function btnUpdateCategoryOrPublisherExecute(){
+			var updateInput = $("#inputUpdateCategoryOrPublisher").val().trim();
+			if(updateInput === '')
+			{
+				alert("항목을 입력해주세요.");
+				return;
+			}
+			if(confirm("정말 수정하시겠습니까?"))
+			{
+				$.ajax({
+					url : $("#nowUpdateUrl").val(),
+					data : {
+						idx : $("#nowUpdateIdx").val(),
+						name : updateInput
+					},
+					success : function(data){
+						alert(data);
+						loadCategory();
+						loadPublisher();
+						$("#btnUpdateCencel").click();
+					}
+				});
+			}
+		}
+		
+		function btnAddCategoryOrPublisherExecute(inputArea,inputType,url){
+			var categoryName = $("#"+inputArea).val().trim();
+			if(categoryName === '' || categoryName.length > 10)
+			{
+				alert(inputType+"를 다시 입력해주세요.");
+				$("#"+inputArea).val('').focus();
+				return;
+			}
+			if(confirm("정말 입력하신 "+inputType+"를 등록하시겠습니까?"))
+			{
+				$.ajax({
+					url : url,
+					data : {
+						name : categoryName
+					},
+					success : function(data){
+						alert(data);
+						$("#"+inputArea).val('');
+						if(inputType === '카테고리')
+							loadCategory();
+						else if(inputType === '출판사')
+							loadPublisher();
+					}
+				});
+			}
+		}
+		
+		window.onload = function(){
+			loadCategory();
+			loadPublisher();
+		}
+	</script>
 </body>
 
 </html>

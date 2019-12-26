@@ -5,14 +5,12 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-	<!-- Root Context: defines shared resources visible to all other web components -->
-	<!-- MySQL dataSource -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"
 			value="com.mysql.cj.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://localhost:3307/shopping?useUnicode=true&amp;characterEncoding=UTF8&amp;allowMultiQueries=true" />
+			value="jdbc:mysql://localhost:3306/bookmanage?useUnicode=true&amp;characterEncoding=UTF8" />
 		<property name="username" value="root" />
 		<property name="password" value="apmsetup" />
 	</bean>
@@ -26,7 +24,8 @@
 		<property name="mapperLocations"
 			value="classpath:mappers/*.xml"></property>
 	</bean>
-	<!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.shop.shopping.DAO" />
-	</bean> -->
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="bookManage.l.pjt.DAO" />
+	</bean>
 </beans>

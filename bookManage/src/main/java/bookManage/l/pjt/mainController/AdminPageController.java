@@ -1,18 +1,28 @@
 package bookManage.l.pjt.mainController;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-/**
- * Handles requests for the application home page.
- */
+import bookManage.l.pjt.domain.Book;
+
 @Controller
 public class AdminPageController {
 
+	private static final Logger logger = LoggerFactory.getLogger(AdminPageController.class);
+
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index() {
+		logger.info("/index");
 		return "backend/index";
 	}
 
@@ -74,5 +84,16 @@ public class AdminPageController {
 	@RequestMapping(value = "/QandAList", method = RequestMethod.GET)
 	public String QandAList() {
 		return "backend/QandAList";
+	}
+
+	@RequestMapping(value = "/addBook", method = RequestMethod.POST)
+	public String bookAdd(@ModelAttribute @Valid Book book, BindingResult result) {
+		if (result.hasErrors()) {
+			List<ObjectError> list = result.getAllErrors();
+			for (ObjectError error : list)
+				logger.error(error.getDefaultMessage());
+			return "backend/bookAdd";
+		}
+		return "redirect:/bookList";
 	}
 }
