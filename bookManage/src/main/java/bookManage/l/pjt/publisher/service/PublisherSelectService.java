@@ -14,7 +14,7 @@ public class PublisherSelectService {
 	@Autowired
 	private PublisherDAO publisherDAO;
 	
-	public List<Map<String, String>> selectCategory(){
+	public List<Map<String, String>> selectPublisher(){
 		return publisherDAO.selectPublisher();
 	}
 }

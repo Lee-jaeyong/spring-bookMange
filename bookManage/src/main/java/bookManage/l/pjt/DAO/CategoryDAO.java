@@ -11,4 +11,6 @@ public interface CategoryDAO {
 	public void updateCategory(Map<String, Object> map);
 
 	public void deleteCategory(Map<String, Object> map);
+	
+	public void insertCategoryFormBook(Map<String, Object> map);
 }

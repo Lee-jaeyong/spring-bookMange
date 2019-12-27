@@ -1,7 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bookManage.l.pjt.DAO.BookDAO">
-	<select id="selectNow" resultType="string">
-		select NOW();
+	<select id="selectBookInfo" parameterType="string" resultType="bookManage.l.pjt.domain.Book">
+		SELECT *
+		FROM lpjt_book
+		WHERE bookIdx = #{idx}
 	</select>
+	
+	<select id="excelFileUpload" parameterType="hashmap" resultType="hashMap">
+		SELECT  
+		<foreach collection="list" item="type" separator=",">
+            ${type}
+        </foreach>
+		FROM lpjt_book
+	</select>
+
+	<select id="selectBookCount" resultType="string" parameterType="hashmap">
+		SELECT COUNT(lpjt_book.bookIdx)
+		FROM lpjt_book,lpjt_relationpublisher,lpjt_relationcategory
+		WHERE lpjt_book.bookIdx = lpjt_relationpublisher.bookidx AND lpjt_book.bookIdx = lpjt_relationcategory.bookidx
+		<if test="searchCategory != ''">
+			AND categoryIdx like #{searchCategory}
+		</if>
+		<if test="searchPublisher != ''">
+			AND publisherIdx like #{searchPublisher}
+		</if>
+		<if test="searchType != ''">
+			AND ${searchType} like #{searchInput}
+		</if>
+		<if test="searchBeforeDate != '' and searchAfterDate != ''">
+			AND bookDate BETWEEN #{searchBeforeDate} AND #{searchAfterDate}
+		</if>
+	</select>
+	
+	<select id="selectBookList" parameterType="hashMap" resultType="hashMap">
+		SELECT lpjt_book.bookIdx,bookISBN,bookName,bookStock,bookStatus,bookImg
+		FROM lpjt_book,lpjt_relationpublisher,lpjt_relationcategory
+		WHERE lpjt_book.bookIdx = lpjt_relationpublisher.bookidx AND lpjt_book.bookIdx = lpjt_relationcategory.bookidx
+		<if test="searchCategory != ''">
+			AND categoryIdx like #{searchCategory}
+		</if>
+		<if test="searchPublisher != ''">
+			AND publisherIdx like #{searchPublisher}
+		</if>
+		<if test="searchType != ''">
+			AND ${searchType} like #{searchInput}
+		</if>
+		<if test="searchBeforeDate != '' and searchAfterDate != ''">
+			AND bookDate BETWEEN #{searchBeforeDate} AND #{searchAfterDate}
+		</if>
+		ORDER BY ${sortType} DESC
+		LIMIT #{pageNum},10
+	</select>
+	
+	<select id="selectNowInsertBookIdx" resultType="string">
+		SELECT MAX(bookIdx) FROM lpjt_book
+	</select>
+	
+	<insert id="insertBook" parameterType="hashMap">
+		INSERT INTO lpjt_book
+		VALUES
+		(NULL,#{isbn},#{bookName},#{bookStock},#{bookPrice},#{bookContent},#{bookBuyType},#{bookImg},#{bookStatus},#{bookAuthor},#{bookDetailContent},#{bookCountry})
+	</insert>
 </mapper>

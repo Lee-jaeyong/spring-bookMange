@@ -17,7 +17,7 @@ public class Book {
 	private long bookPrice;
 
 	@NotNull(message = "수량을 입력해주세요.")
-	private byte stock;
+	private int stock;
 
 	@NotNull(message = "저자를 입력해주세요.")
 	@Size(min = 1, message = "저자를 입력해주세요.")
@@ -26,9 +26,25 @@ public class Book {
 	private byte lendStatus;
 	private byte categoryNum;
 	private byte publisherNum;
+	private byte bookBuyType;
+	private byte country;
 
-	@NotNull(message = "도서 이미지를 선택해주세요.")
-	@Size(min = 1, message = "도서 이미지를 선택해주세요.")
+	public byte getBookBuyType() {
+		return bookBuyType;
+	}
+
+	public byte getCountry() {
+		return country;
+	}
+
+	public void setCountry(byte country) {
+		this.country = country;
+	}
+
+	public void setBookBuyType(byte bookBuyType) {
+		this.bookBuyType = bookBuyType;
+	}
+
 	private String bookImg;
 
 	@NotNull(message = "도서 줄거리를 입력해주세요.")
@@ -63,11 +79,11 @@ public class Book {
 		this.bookPrice = bookPrice;
 	}
 
-	public byte getStock() {
+	public int getStock() {
 		return stock;
 	}
 
-	public void setStock(byte stock) {
+	public void setStock(int stock) {
 		this.stock = stock;
 	}
 

@@ -11,4 +11,6 @@ public interface PublisherDAO {
 	public void updatePublisher(Map<String, Object> map);
 
 	public void deletePublisher(Map<String, Object> map);
+
+	public void insertPublisherFromBook(Map<String, Object> map);
 }

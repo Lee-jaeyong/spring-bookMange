@@ -159,6 +159,20 @@
 			$("#btnUpdateCategoryOrPublisherExecute").click(function(){
 				btnUpdateCategoryOrPublisherExecute();
 			});
+			
+			$("#inputCategoryName").keyup(function(){
+				if(window.event.keyCode == 13)
+				{
+					btnAddCategoryOrPublisherExecute('inputCategoryName','카테고리','./category/addCategory');
+				}
+			});
+			
+			$("#inputPublisherName").keyup(function(){
+				if(window.event.keyCode == 13)
+				{
+					btnAddCategoryOrPublisherExecute('inputPublisherName','출판사','./publisher/addPublisher');
+				}
+			});
 		});
 		
 		function loadCategory(){

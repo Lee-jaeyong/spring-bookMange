@@ -78,6 +78,6 @@ public class PublisherController {
 
 	@GetMapping(value = "/selectPublisher", produces = "text/plain;charset=UTF-8")
 	public String selectPublisher() throws JsonGenerationException, JsonMappingException, IOException {
-		return objMapper.writeValueAsString(publisherSelectService.selectCategory());
+		return objMapper.writeValueAsString(publisherSelectService.selectPublisher());
 	}
 }

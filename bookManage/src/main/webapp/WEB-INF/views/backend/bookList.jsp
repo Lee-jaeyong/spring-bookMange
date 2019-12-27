@@ -1,6 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="include/head.jsp"%>
+
+<style>
+.showImg {
+
+}
+.hideImg {
+	display: none;
+}
+</style>
 <body id="page-top">
 
 	<!-- Page Wrapper -->
@@ -30,13 +40,35 @@
 								<tbody>
 									<tr>
 										<td>검색 분류 :</td>
-										<td><select class="form-control" id="sel1"
-											name="sellist1">
-												<option>분 류</option>
+										<td><select class="form-control" id="searchType"
+											name="searchType">
+												<option value="">분 류</option>
+												<option value="bookIdx">고유 번호</option>
+												<option value="bookISBN">ISBN</option>
+												<option value="bookName">도서명</option>
+												<option value="bookStock">도서 수량</option>
+												<option value="bookStatus">대출 가능 여부</option>
 										</select></td>
 										<td><input type="text"
-											class="form-control form-control-user" id=""
+											class="form-control form-control-user" id="searchInput"
 											placeholder="도서 수량"></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td><select class="form-control" id="searchCategory"
+											name="searchCategory">
+												<option value="">분 류</option>
+												<c:forEach items="${category}" var="item">
+													<option value="${item.categoryIdx}">${item.categoryName}</option>
+												</c:forEach>
+										</select></td>
+										<td><select class="form-control" id="searchPublisher"
+											name="searchPublisher">
+												<option value="">출판사</option>
+												<c:forEach items="${publisher}" var="item">
+													<option value="${item.publisherIdx}">${item.publisherName}</option>
+												</c:forEach>
+										</select></td>
 									</tr>
 									<tr>
 										<td>도서 등록일 :</td>
@@ -49,67 +81,60 @@
 									</tr>
 									<tr>
 										<td colspan="3" style="text-align: center;">
-											<button type="button" class="btn btn-primary col-lg-7">검
+											<button id="btnSearchBook" type="button" class="btn btn-primary col-lg-7">검
 												색</button>
 										</td>
 									</tr>
 									<tr>
 										<td colspan="3" style="text-align: center;">
-											<button type="button" class="btn btn-secondary col-lg-7">검색
+											<button id="btnSearchClear" type="button" class="btn btn-secondary col-lg-7">검색
 												초기화</button>
 										</td>
 									</tr>
 									<tr>
-										<td colspan="3" style="text-align: center;"><a href="#"
+										<td colspan="3" style="text-align: center;"><a href="javascript:excelFileUpload()"
 											class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3"><i
 												class="fas fa-download fa-sm text-white-50"></i> 엑셀 파일 업로드</a>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;" checked="checked">도서
-													번호
+													type="checkbox" class="form-check-input" value="bookIdx"
+													style="width: 16px; height: 16px;" checked="checked" name="chkExcelUpload"><span>도서 번호</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;" checked="checked">ISBN
+													type="checkbox" class="form-check-input" value="bookISBN"
+													style="width: 16px; height: 16px;" checked="checked" name="chkExcelUpload"><span>ISBN</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;">도서명
+													type="checkbox" class="form-check-input" value="bookName"
+													style="width: 16px; height: 16px;" name="chkExcelUpload"><span>도서명</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;">도서 수량
+													type="checkbox" class="form-check-input" value="bookStock"
+													style="width: 16px; height: 16px;" name="chkExcelUpload"><span>도서 수량</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;">대출 가능 여부
+													type="checkbox" class="form-check-input" value="bookStatus"
+													style="width: 16px; height: 16px;" name="chkExcelUpload"><span>대출 가능 여부</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;">매입 도서 가격
+													type="checkbox" class="form-check-input" value="bookPrice"
+													style="width: 16px; height: 16px;" name="chkExcelUpload"><span>매입 도서 가격</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;">총 대출 횟수
-												</label>
-											</div>
-											<div class="form-check-inline">
-												<label class="form-check-label"> <input
-													type="checkbox" class="form-check-input" value=""
-													style="width: 16px; height: 16px;">도서 등록일
+													type="checkbox" class="form-check-input" value="bookDate"
+													style="width: 16px; height: 16px;" name="chkExcelUpload"><span>도서 등록일</span>
 												</label>
 											</div></td>
 									</tr>
@@ -132,8 +157,17 @@
 						<div class="card-body">
 							<div class="row">
 								<div class="col-lg-3 mb-3">
-									<select class="form-control" id="sel1">
-										<option>정 렬</option>
+									<select class="form-control" id="sortType">
+										<option value="bookIdx">정 렬</option>
+										<option value="bookPrice">매입 가격 순</option>
+										<option value="bookDate">등록일 순</option>
+										<option value="bookIdx">도서 고유 번호 순</option>
+									</select>
+								</div>
+								<div class="col-lg-3 mb-3">
+									<select class="form-control" id="selectShowImage">
+										<option value="1">도서 이미지 포함</option>
+										<option value="0">도서 이미지 미포함</option>
 									</select>
 								</div>
 							</div>
@@ -144,56 +178,18 @@
 											<th></th>
 											<th>도서 고유 번호</th>
 											<th>ISBN</th>
+											<th class="showImg">이미지</th>
 											<th>도서명</th>
 											<th>도서 수량</th>
 											<th>대출 가능 여부</th>
 											<th></th>
 										</tr>
 									</thead>
-									<tr>
-										<td></td>
-										<td>Developer</td>
-										<td>San Francisco</td>
-										<td>30</td>
-										<td>2010/07/14</td>
-										<td>$86,500</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td>Shad Decker</td>
-										<td>Regional Director</td>
-										<td>51</td>
-										<td>2008/11/13</td>
-										<td>$183,000</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td>Michael Bruce</td>
-										<td>Javascript Developer</td>
-										<td>29</td>
-										<td>2011/06/27</td>
-										<td>$183,000</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td>Donna Snider</td>
-										<td>Customer Support</td>
-										<td>27</td>
-										<td>2011/01/25</td>
-										<td>$112,000</td>
-										<td></td>
-									</tr>
+									<tbody id="bookListSection">
 									</tbody>
 								</table>
 							</div>
-							<div class="btn-group">
-								<button type="button" class="btn btn-outline-primary">Prev</button>
-								<button type="button" class="btn btn-outline-primary">1</button>
-								<button type="button" class="btn btn-outline-primary">Next</button>
-							</div>
+							<div class="btn-group" id="pageSection"></div>
 						</div>
 					</div>
 				</div>
@@ -208,7 +204,12 @@
 
 	</div>
 	<!-- End of Page Wrapper -->
-
+	<input type="hidden" id="hiddenSearchType" value=""/>
+	<input type="hidden" id="hiddenSearchInput" value=""/>
+	<input type="hidden" id="hiddenSearchCategory" value=""/>
+	<input type="hidden" id="hiddenSearchPublisher" value=""/>
+	<input type="hidden" id="hiddenSearchBeforeDate" value=""/>
+	<input type="hidden" id="hiddenSearchAfterDate" value=""/>
 	<%@include file="include/scrollButton.jsp"%>
 	<%@include file="include/script.jsp"%>
 
@@ -217,7 +218,135 @@
 			$("#beforeDate, #afterDate").datepicker({
 				dateFormat : 'yy-mm-dd'
 			});
+			
+			$("#btnSearchBook").click(function(){
+				btnSearchExecute();
+				loadBookList(0);
+			});
+			
+			$("#btnSearchClear").click(function(){
+				btnSearchClear();
+				loadBookList(0);
+			});
+			
+			$("#sortType").change(function(){
+				loadBookList(0);
+			});
+			
+			$("#selectShowImage").change(function(){
+				if ($(this).val() === '0')
+					$(".showImg").attr("class", "hideImg");
+				else
+					$(".hideImg").attr("class", "showImg");
+			});
 		});
+
+		function excelFileUpload(){
+			var chkValue = '';
+			var chkHead = '';
+			$("input[name=chkExcelUpload]:checked").each(function() { 
+				chkValue += $(this).val()+','; 
+				chkHead += $(this).next().text()+',';
+			});
+			location.href = "./excelFileUpload?chkHead="+chkHead+"&chkValue="+chkValue;
+		}
+		
+		function btnSearchExecute(){
+			$("#hiddenSearchType").val($("#searchType").val());
+			$("#hiddenSearchInput").val($("#searchInput").val());
+			$("#hiddenSearchCategory").val($("#searchCategory").val());
+			$("#hiddenSearchPublisher").val($("#searchPublisher").val());
+			$("#hiddenSearchBeforeDate").val($("#beforeDate").val());
+			$("#hiddenSearchAfterDate").val($("#afterDate").val());
+		}
+		
+		function btnSearchClear(){
+			$("#searchCategory option:eq(0)").prop("selected", true);
+			$("#searchPublisher option:eq(0)").prop("selected", true);
+			$("#searchType option:eq(0)").prop("selected", true);
+			$("#hiddenSearchType").val('');
+			$("#searchInput").val('');
+			$("#beforeDate").val('');
+			$("#afterDate").val('');
+			$("#hiddenSearchInput").val('');
+			$("#hiddenSearchCategory").val('');
+			$("#hiddenSearchPublisher").val('');
+			$("#hiddenSearchBeforeDate").val('');
+			$("#hiddenSearchAfterDate").val('');
+		}
+		
+		function readBook(idx){
+			location.href = "./selectBook?idx="+idx;
+		}
+		
+		function loadBookList(pageNum) {
+			$.ajax({
+						url : "./bookList/selectBookList",
+						dataType : "json",
+						data : {
+							pageNum : pageNum,
+							searchType : $("#hiddenSearchType").val(),
+							searchInput : $("#hiddenSearchInput").val(),
+							searchCategory : $("#hiddenSearchCategory").val(),
+							searchPublisher : $("#hiddenSearchPublisher").val(),
+							searchBeforeDate : $("#hiddenSearchBeforeDate").val(),
+							searchAfterDate : $("#hiddenSearchAfterDate").val(),
+							sortType : $("#sortType").val()
+						},
+						success : function(data) {
+							var bookListSection = '';
+							var pageSection = '';
+							var startBlock = data.startBlock;
+							var endBlock = data.endBlock;
+							var totalBlock = data.totalBlock;
+							var bookList = data.result;
+							for (var i = 0; i < bookList.length; i++) {
+								bookListSection += "<tr>";
+								bookListSection += '<td></td>';
+								bookListSection += '<td width="20px;" style="text-align:center;">' + bookList[i].bookIdx
+										+ '</td>';
+								bookListSection += '<td>'
+										+ bookList[i].bookISBN + '</td>';
+								bookListSection += '<td class="showImg" width="130px;" style="text-align:center;"><img src="${pageContext.request.contextPath}/resources/bookImages/'+bookList[i].bookImg+'" style="width:100px; height:150px;"/></td>';
+								bookListSection += '<td>'
+										+ bookList[i].bookName + '</td>';
+								bookListSection += '<td>'
+										+ bookList[i].bookStock + '</td>';
+								var status = "대출 가능";
+								if (bookList[i].bookStatus == 0)
+									status = "대출 불가";
+								bookListSection += '<td>' + status + '</td>';
+								bookListSection += '<td width="120px;" style="text-align:center;"><button type="button" class="btn btn-primary" onclick="readBook('+bookList[i].bookIdx+')">상세 보기</button></td>';
+								bookListSection += "</tr>";
+							}
+
+							if (startBlock == 0)
+								pageSection += '<button type="button" class="btn btn-outline-primary" disabled="disabled">Prev</button>';
+							else
+								pageSection += '<button type="button" class="btn btn-outline-primary">Prev</button>';
+
+							for (var i = startBlock; i < endBlock; i++) {
+								if (i == pageNum)
+									pageSection += '<button type="button" class="btn btn-outline-primary" disabled="disabled">'
+											+ (i + 1) + '</button>';
+								else
+									pageSection += '<button type="button" class="btn btn-outline-primary" onclick="loadBookList('
+											+ i + ')">' + (i + 1) + '</button>';
+							}
+
+							if (endBlock == totalBlock)
+								pageSection += '<button type="button" class="btn btn-outline-primary" disabled="disabled">Next</button>';
+							else
+								pageSection += '<button type="button" class="btn btn-outline-primary">Next</button>';
+							$("#bookListSection").html(bookListSection);
+							$("#pageSection").html(pageSection);
+						}
+					});
+		}
+
+		window.onload = function() {
+			loadBookList(0);
+		}
 	</script>
 
 </body>

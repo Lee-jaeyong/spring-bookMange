@@ -21,7 +21,6 @@ public class DatabaseTest {
 
 	@Test
 	public void test() {
-		logger.warn(book.selectNow());
 	}
 
 }

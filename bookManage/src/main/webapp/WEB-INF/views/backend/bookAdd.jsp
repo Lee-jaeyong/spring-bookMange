@@ -1,17 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="include/head.jsp"%>
+<c:if test="${not empty error}">
+	<input type="hidden" id="error" value="${error}"/>
+	<script>
+		alert(document.getElementById("error").value);
+	</script>
+</c:if>
 <body id="page-top">
 	<!-- Page Wrapper -->
 	<div id="wrapper">
 		<%@include file="include/sideBar.jsp"%>
 		<!-- Content Wrapper -->
 		<div id="content-wrapper" class="d-flex flex-column">
-
 			<!-- Main Content -->
 			<div id="content">
-
 				<!-- Topbar -->
 				<nav
 					class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -27,7 +31,7 @@
 									<h6 class="m-0 font-weight-bold text-primary">도서 등록</h6>
 								</div>
 								<div class="card-body">
-									<form action="./addBook" method="post">
+									<form id="addBookForm" action="./addBookExecute" method="post" enctype = "multipart/form-data">
 										<div class="col-lg-12">
 											<div class="card mb-4 py-3 border-left-primary">
 												<div class="card-body">
@@ -49,7 +53,8 @@
 														<div class="col-sm-6 mb-3 mb-sm-0">
 															<label for="comment">매입 도서 가격:</label> <input type="text"
 																class="form-control form-control-user" name="bookPrice"
-																id="bookPrice" placeholder="매입 도서 가격" value="${book.bookPrice }">
+																id="bookPrice" placeholder="매입 도서 가격"
+																value="${book.bookPrice }">
 														</div>
 														<div class="col-sm-6">
 															<label for="comment">도서 수량:</label> <input type="text"
@@ -69,7 +74,7 @@
 															<div class="form-check-inline">
 																<label class="form-check-label"> <input
 																	type="radio" class="form-check-input" name="lendStatus"
-																	value="1">대출 가능
+																	value="1" checked="checked">대출 가능
 																</label>
 															</div>
 															<div class="form-check-inline">
@@ -82,16 +87,53 @@
 													</div>
 													<hr>
 													<div class="form-group row">
+														<div class="col-sm-6 mt-3">
+															<label for="comment" class="mr-2">매입 종류:</label>
+															<div class="form-check-inline">
+																<label class="form-check-label"> <input
+																	type="radio" class="form-check-input" name="bookBuyType"
+																	value="0" checked="checked">기 부
+																</label>
+															</div>
+															<div class="form-check-inline">
+																<label class="form-check-label"> <input
+																	type="radio" class="form-check-input" name="bookBuyType"
+																	value="1">구 매
+																</label>
+															</div>
+														</div>
+														<div class="col-sm-6 mt-3">
+															<label for="comment" class="mr-2">국내 및 해외 도서:</label>
+															<div class="form-check-inline">
+																<label class="form-check-label"> <input
+																	type="radio" class="form-check-input" name="country"
+																	value="0" checked="checked">국 내
+																</label>
+															</div>
+															<div class="form-check-inline">
+																<label class="form-check-label"> <input
+																	type="radio" class="form-check-input" name="country"
+																	value="1">해 외
+																</label>
+															</div>
+														</div>
+													</div>
+													<hr>
+													<div class="form-group row">
 														<div class="col-sm-6 mb-3 mb-sm-0">
 															<label for="comment">분 류:</label> <select
 																class="form-control" id="sel1" name="categoryNum">
-																<option value="0">분 류</option>
+																<c:forEach items="${category}" var="item">
+																	<option value="${item.categoryIdx}">${item.categoryName}</option>
+																</c:forEach>
 															</select>
 														</div>
 														<div class="col-sm-6">
 															<label for="comment">출판사:</label> <select
 																class="form-control" id="sel1" name="publisherNum">
-																<option value="0">출판사</option>
+																<c:forEach items="${publisher}" var="item">
+																	<option value="${item.publisherIdx}">${item.publisherName}</option>
+																</c:forEach>
 															</select>
 														</div>
 													</div>
@@ -123,14 +165,14 @@
 														<div class="col-sm-12 mb-3 mb-sm-0">
 															<div class="form-check">
 																<label class="form-check-label"> <input
-																	type="checkbox" class="form-check-input" value="">위
+																	type="checkbox" class="form-check-input" id="submitCheck">위
 																	모든 항목으로 도서를 등록하겠습니다
 																</label>
 															</div>
 														</div>
 													</div>
 													<hr>
-													<button type="submit" class="btn btn-primary btn-block">도서
+													<button type="button" id="btnSubmitButton" class="btn btn-primary btn-block">도서
 														등록</button>
 												</div>
 											</div>
@@ -149,6 +191,72 @@
 	<!-- End of Page Wrapper -->
 	<%@include file="include/scrollButton.jsp"%>
 	<%@include file="include/script.jsp"%>
+	<script>
+		$(document).ready(function(){
+			$("#btnSubmitButton").click(function(){
+				btnSubmit();
+			});
+		});
+		
+		function btnSubmit(){
+			if(!$("input:checkbox[id='submitCheck']").is(":checked"))
+			{
+				alert("도서 등록 확인을 체크해주세요.");
+				$("#submitCheck").focus();
+			}
+			else if($("#bookName").val().trim() === '')
+			{
+				alert("도서명을 입력해주세요.");
+				$("#bookName").focus();				
+			}
+			else if($("#isbn").val().trim() === '')
+			{
+				alert("ISBN을 입력해주세요.");
+				$("#isbn").focus();				
+			}
+			else if($("#bookPrice").val().trim() === '')
+			{
+				alert("매입 도서가격을 입력해주세요.");
+				$("#bookPrice").focus();				
+			}
+			else if($("#stock").val().trim() === '')
+			{
+				alert("수량을 입력해주세요.");
+				$("#stock").focus();				
+			}
+			else if($("#author").val().trim() === '')
+			{
+				alert("저자를 입력해주세요.");
+				$("#author").focus();				
+			}
+			else if($("#bookImg").val().trim() === '')
+			{
+				alert("도서 이미지를 선택해주세요.");
+				$("#bookImg").focus();				
+			}
+			else if($("#bookContent").text().trim() === '')
+			{
+				alert("줄거리를 입력해주세요.");
+				$("#bookContent").focus();				
+			}
+			else if($("#bookDetail").text().trim() === '')
+			{
+				alert("상세내용을 입력해주세요.");
+				$("#bookDetail").focus();				
+			}else if(isNaN($("#bookPrice").val()))
+			{
+				alert("도서 매입가격은 숫자만 입력해주세요.");
+				$("#bookPrice").focus();	
+			}else if(isNaN($("#stock").val()))
+			{
+				alert("수량은 숫자만 입력해주세요.");
+				$("#stock").focus();	
+			}else
+			{
+				$("#addBookForm").submit();
+			}
+		}
+	</script>
 </body>
 
 </html>
