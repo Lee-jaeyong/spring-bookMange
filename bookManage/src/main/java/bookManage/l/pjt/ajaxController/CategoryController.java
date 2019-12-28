@@ -18,11 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bookManage.l.pjt.category.service.CategoryDeleteService;
-import bookManage.l.pjt.category.service.CategoryInsertService;
-import bookManage.l.pjt.category.service.CategorySelectService;
-import bookManage.l.pjt.category.service.CategoryUpdateService;
 import bookManage.l.pjt.domain.Category;
+import bookManage.l.pjt.service.CategoryService;
 
 @RestController
 @RequestMapping(value = "category")
@@ -31,23 +28,14 @@ public class CategoryController {
 	private static Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
 	@Resource
-	CategoryInsertService categoryInsertService;
-
-	@Resource
-	CategorySelectService categorySelectService;
-
-	@Resource
-	CategoryUpdateService categoryUpdateService;
-
-	@Resource
-	CategoryDeleteService categoryDeleteService;
+	CategoryService categoryService;
 
 	@Autowired
 	ObjectMapper objMapper;
 
 	@GetMapping(value = "/deleteCategory", produces = "text/plain;charset=UTF-8")
 	public String deleteCategory(Category category) {
-		categoryDeleteService.deleteCategory(category);
+		categoryService.deleteCategory(category);
 		return "카테고리가 정상적으로 삭제되었습니다.";
 	}
 
@@ -60,7 +48,7 @@ public class CategoryController {
 				return errorIndex.getDefaultMessage();
 			}
 		}
-		categoryUpdateService.updateCategory(category);
+		categoryService.updateCategory(category);
 		return "카테고리가 수정되었습니다.";
 	}
 
@@ -73,12 +61,12 @@ public class CategoryController {
 				return errorIndex.getDefaultMessage();
 			}
 		}
-		categoryInsertService.insertCategory(category);
+		categoryService.insertCategory(category);
 		return "카테고리가 등록되었습니다.";
 	}
 
 	@GetMapping(value = "/selectCategory", produces = "text/plain;charset=UTF-8")
 	public String selectCategory() throws JsonGenerationException, JsonMappingException, IOException {
-		return objMapper.writeValueAsString(categorySelectService.selectCategory());
+		return objMapper.writeValueAsString(categoryService.selectCategory());
 	}
 }

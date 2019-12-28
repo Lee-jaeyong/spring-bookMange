@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import bookManage.l.pjt.book.service.BookService;
 import bookManage.l.pjt.requestCommand.BookListRequest;
+import bookManage.l.pjt.service.BookService;
 
 @RestController
 @RequestMapping(value = "bookList")

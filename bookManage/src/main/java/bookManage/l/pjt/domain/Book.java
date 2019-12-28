@@ -5,45 +5,31 @@ import javax.validation.constraints.Size;
 
 public class Book {
 
+	private String bookIdx;
+
 	@NotNull(message = "도서명을 입력해주세요.")
 	@Size(min = 1, message = "도서명을 입력해주세요")
 	private String bookName;
 
 	@NotNull(message = "ISBN을 입력해주세요.")
 	@Size(min = 1, message = "ISBN을 입력해주세요.")
-	private String isbn;
+	private String bookISBN;
 
 	@NotNull(message = "매입 가격을 입력해주세요.")
 	private long bookPrice;
 
 	@NotNull(message = "수량을 입력해주세요.")
-	private int stock;
+	private int bookStock;
 
 	@NotNull(message = "저자를 입력해주세요.")
 	@Size(min = 1, message = "저자를 입력해주세요.")
-	private String author;
+	private String bookAuthor;
 
-	private byte lendStatus;
-	private byte categoryNum;
-	private byte publisherNum;
+	private byte bookStatus;
+	private byte categoryIdx;
+	private byte publisherIdx;
 	private byte bookBuyType;
-	private byte country;
-
-	public byte getBookBuyType() {
-		return bookBuyType;
-	}
-
-	public byte getCountry() {
-		return country;
-	}
-
-	public void setCountry(byte country) {
-		this.country = country;
-	}
-
-	public void setBookBuyType(byte bookBuyType) {
-		this.bookBuyType = bookBuyType;
-	}
+	private byte bookCountry;
 
 	private String bookImg;
 
@@ -53,7 +39,23 @@ public class Book {
 
 	@NotNull(message = "상세정보를 입력해주세요.")
 	@Size(min = 1, message = "상세정보를 입력해주세요.")
-	private String bookDetail;
+	private String bookDetailContent;
+
+	public void setBookIdx(String bookIdx) {
+		this.bookIdx = bookIdx;
+	}
+
+	public String getBookIdx() {
+		return bookIdx;
+	}
+
+	public byte getBookBuyType() {
+		return bookBuyType;
+	}
+
+	public void setBookBuyType(byte bookBuyType) {
+		this.bookBuyType = bookBuyType;
+	}
 
 	public String getBookName() {
 		return bookName;
@@ -63,12 +65,12 @@ public class Book {
 		this.bookName = bookName;
 	}
 
-	public String getIsbn() {
-		return isbn;
+	public String getBookISBN() {
+		return bookISBN;
 	}
 
-	public void setIsbn(String isbn) {
-		this.isbn = isbn;
+	public void setBookISBN(String bookISBN) {
+		this.bookISBN = bookISBN;
 	}
 
 	public long getBookPrice() {
@@ -79,44 +81,52 @@ public class Book {
 		this.bookPrice = bookPrice;
 	}
 
-	public int getStock() {
-		return stock;
+	public int getBookStock() {
+		return bookStock;
 	}
 
-	public void setStock(int stock) {
-		this.stock = stock;
+	public void setBookStock(int bookStock) {
+		this.bookStock = bookStock;
 	}
 
-	public String getAuthor() {
-		return author;
+	public String getBookAuthor() {
+		return bookAuthor;
 	}
 
-	public void setAuthor(String author) {
-		this.author = author;
+	public void setBookAuthor(String bookAuthor) {
+		this.bookAuthor = bookAuthor;
 	}
 
-	public byte getLendStatus() {
-		return lendStatus;
+	public byte getBookStatus() {
+		return bookStatus;
 	}
 
-	public void setLendStatus(byte lendStatus) {
-		this.lendStatus = lendStatus;
+	public void setBookStatus(byte bookStatus) {
+		this.bookStatus = bookStatus;
 	}
 
-	public byte getCategoryNum() {
-		return categoryNum;
+	public byte getCategoryIdx() {
+		return categoryIdx;
 	}
 
-	public void setCategoryNum(byte categoryNum) {
-		this.categoryNum = categoryNum;
+	public void setCategoryIdx(byte categoryIdx) {
+		this.categoryIdx = categoryIdx;
 	}
 
-	public byte getPublisherNum() {
-		return publisherNum;
+	public byte getPublisherIdx() {
+		return publisherIdx;
 	}
 
-	public void setPublisherNum(byte publisherNum) {
-		this.publisherNum = publisherNum;
+	public void setPublisherIdx(byte publisherIdx) {
+		this.publisherIdx = publisherIdx;
+	}
+
+	public byte getBookCountry() {
+		return bookCountry;
+	}
+
+	public void setBookCountry(byte bookCountry) {
+		this.bookCountry = bookCountry;
 	}
 
 	public String getBookImg() {
@@ -135,12 +145,12 @@ public class Book {
 		this.bookContent = bookContent;
 	}
 
-	public String getBookDetail() {
-		return bookDetail;
+	public String getBookDetailContent() {
+		return bookDetailContent;
 	}
 
-	public void setBookDetail(String bookDetail) {
-		this.bookDetail = bookDetail;
+	public void setBookDetailContent(String bookDetailContent) {
+		this.bookDetailContent = bookDetailContent;
 	}
 
 }

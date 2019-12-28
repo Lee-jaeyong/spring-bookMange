@@ -5,8 +5,9 @@
 
 <style>
 .showImg {
-
+	
 }
+
 .hideImg {
 	display: none;
 }
@@ -81,30 +82,33 @@
 									</tr>
 									<tr>
 										<td colspan="3" style="text-align: center;">
-											<button id="btnSearchBook" type="button" class="btn btn-primary col-lg-7">검
-												색</button>
+											<button id="btnSearchBook" type="button"
+												class="btn btn-primary col-lg-7">검 색</button>
 										</td>
 									</tr>
 									<tr>
 										<td colspan="3" style="text-align: center;">
-											<button id="btnSearchClear" type="button" class="btn btn-secondary col-lg-7">검색
-												초기화</button>
+											<button id="btnSearchClear" type="button"
+												class="btn btn-secondary col-lg-7">검색 초기화</button>
 										</td>
 									</tr>
 									<tr>
-										<td colspan="3" style="text-align: center;"><a href="javascript:excelFileUpload()"
+										<td colspan="3" style="text-align: center;"><a
+											href="javascript:excelFileUpload()"
 											class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-3"><i
 												class="fas fa-download fa-sm text-white-50"></i> 엑셀 파일 업로드</a>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
 													type="checkbox" class="form-check-input" value="bookIdx"
-													style="width: 16px; height: 16px;" checked="checked" name="chkExcelUpload"><span>도서 번호</span>
+													style="width: 16px; height: 16px;" checked="checked"
+													name="chkExcelUpload" disabled="disabled"><span>도서 번호</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
 												<label class="form-check-label"> <input
 													type="checkbox" class="form-check-input" value="bookISBN"
-													style="width: 16px; height: 16px;" checked="checked" name="chkExcelUpload"><span>ISBN</span>
+													style="width: 16px; height: 16px;" checked="checked"
+													name="chkExcelUpload" disabled="disabled"><span>ISBN</span>
 												</label>
 											</div>
 											<div class="form-check-inline">
@@ -195,63 +199,119 @@
 				</div>
 			</div>
 			<!-- End of Main Content -->
-
 			<%@include file="include/footer.html"%>
 			<!-- End of Footer -->
-
 		</div>
 		<!-- End of Content Wrapper -->
-
 	</div>
+	<form id="formBookRead" method="post">
+		<input type="hidden" value="" id="idx" name="idx" />
+	</form>
 	<!-- End of Page Wrapper -->
-	<input type="hidden" id="hiddenSearchType" value=""/>
-	<input type="hidden" id="hiddenSearchInput" value=""/>
-	<input type="hidden" id="hiddenSearchCategory" value=""/>
-	<input type="hidden" id="hiddenSearchPublisher" value=""/>
-	<input type="hidden" id="hiddenSearchBeforeDate" value=""/>
-	<input type="hidden" id="hiddenSearchAfterDate" value=""/>
+	<input type="hidden" id="hiddenSearchType" value="" />
+	<input type="hidden" id="hiddenSearchInput" value="" />
+	<input type="hidden" id="hiddenSearchCategory" value="" />
+	<input type="hidden" id="hiddenSearchPublisher" value="" />
+	<input type="hidden" id="hiddenSearchBeforeDate" value="" />
+	<input type="hidden" id="hiddenSearchAfterDate" value="" />
 	<%@include file="include/scrollButton.jsp"%>
 	<%@include file="include/script.jsp"%>
-
+	<!-- The Modal -->
+	  <div class="modal fade" id="updateImg">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	      
+	        <!-- Modal Header -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">Modal Heading</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        
+	        <!-- Modal body -->
+	        <div class="modal-body">
+				<div class="row">
+					<div class="col-lg-6">
+			        	<label>* 변경 전 이미지 </label>
+						<img id="imgUpdateImg" src="" style="width: 200px;height: 200px;">
+					</div>
+					<div class="col-lg-6">
+			        	<label>* 변경 후 이미지 </label>
+			        	<form id="formUpdateImg" action="./updateBookImg" method="post" enctype="multipart/form-data">
+			        		<input type="hidden" id="originFileName" name="originFileName" class="col">
+				        	<input type="hidden" id="inputUpdateIdx" name="bookIdx" value="">
+			        		<input type="file" id="file" name="file" class="col">
+							<img id="afterUpdateImg" src="" style="width: 200px;height: 180px;">
+						</form>
+					</div>
+				</div>	        	
+	        </div>
+	        
+	        <!-- Modal footer -->
+	        <div class="modal-footer">
+	          <button type="button" id="btnUpdateImg" class="btn btn-danger">이미지 변경</button>
+	          <button type="button" class="btn btn-danger" data-dismiss="modal">닫 기</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#beforeDate, #afterDate").datepicker({
 				dateFormat : 'yy-mm-dd'
 			});
-			
-			$("#btnSearchBook").click(function(){
+
+			$("#btnSearchBook").click(function() {
 				btnSearchExecute();
 				loadBookList(0);
 			});
-			
-			$("#btnSearchClear").click(function(){
+
+			$("#btnSearchClear").click(function() {
 				btnSearchClear();
 				loadBookList(0);
 			});
-			
-			$("#sortType").change(function(){
+
+			$("#sortType").change(function() {
 				loadBookList(0);
+				$("#selectShowImage option:eq(0)").prop("selected", true);
+				$(".hideImg").attr("class", "showImg");
 			});
-			
-			$("#selectShowImage").change(function(){
+
+			$("#selectShowImage").change(function() {
 				if ($(this).val() === '0')
 					$(".showImg").attr("class", "hideImg");
 				else
 					$(".hideImg").attr("class", "showImg");
 			});
+			
+			$("#file").change(function(){
+				readURL(this, 'afterUpdateImg');
+			});
+			
+			$("#btnUpdateImg").click(function(){
+				updateImgExecute();
+			});
 		});
 
-		function excelFileUpload(){
-			var chkValue = '';
-			var chkHead = '';
-			$("input[name=chkExcelUpload]:checked").each(function() { 
-				chkValue += $(this).val()+','; 
-				chkHead += $(this).next().text()+',';
-			});
-			location.href = "./excelFileUpload?chkHead="+chkHead+"&chkValue="+chkValue;
+		function updateImgExecute(){
+			if($("#file").val() === '')
+				alert("이미지를 선택해주시기 바랍니다.");
+			else
+				if(confirm("정말 이미지를 변경하시겠습니까?"))
+					$("#formUpdateImg").submit();
 		}
 		
-		function btnSearchExecute(){
+		function excelFileUpload() {
+			var chkValue = '';
+			var chkHead = '';
+			$("input[name=chkExcelUpload]:checked").each(function() {
+				chkValue += $(this).val() + ',';
+				chkHead += $(this).next().text() + ',';
+			});
+			location.href = "./excelFileUpload?chkHead=" + chkHead
+					+ "&chkValue=" + chkValue;
+		}
+
+		function btnSearchExecute() {
 			$("#hiddenSearchType").val($("#searchType").val());
 			$("#hiddenSearchInput").val($("#searchInput").val());
 			$("#hiddenSearchCategory").val($("#searchCategory").val());
@@ -259,8 +319,8 @@
 			$("#hiddenSearchBeforeDate").val($("#beforeDate").val());
 			$("#hiddenSearchAfterDate").val($("#afterDate").val());
 		}
-		
-		function btnSearchClear(){
+
+		function btnSearchClear() {
 			$("#searchCategory option:eq(0)").prop("selected", true);
 			$("#searchPublisher option:eq(0)").prop("selected", true);
 			$("#searchType option:eq(0)").prop("selected", true);
@@ -274,13 +334,15 @@
 			$("#hiddenSearchBeforeDate").val('');
 			$("#hiddenSearchAfterDate").val('');
 		}
-		
-		function readBook(idx){
-			location.href = "./selectBook?idx="+idx;
+
+		function readBook(idx) {
+			$("#idx").val(idx);
+			$("#formBookRead").attr("action","./selectBook").submit();
 		}
-		
+
 		function loadBookList(pageNum) {
-			$.ajax({
+			$
+					.ajax({
 						url : "./bookList/selectBookList",
 						dataType : "json",
 						data : {
@@ -289,7 +351,8 @@
 							searchInput : $("#hiddenSearchInput").val(),
 							searchCategory : $("#hiddenSearchCategory").val(),
 							searchPublisher : $("#hiddenSearchPublisher").val(),
-							searchBeforeDate : $("#hiddenSearchBeforeDate").val(),
+							searchBeforeDate : $("#hiddenSearchBeforeDate")
+									.val(),
 							searchAfterDate : $("#hiddenSearchAfterDate").val(),
 							sortType : $("#sortType").val()
 						},
@@ -303,11 +366,11 @@
 							for (var i = 0; i < bookList.length; i++) {
 								bookListSection += "<tr>";
 								bookListSection += '<td></td>';
-								bookListSection += '<td width="20px;" style="text-align:center;">' + bookList[i].bookIdx
-										+ '</td>';
+								bookListSection += '<td width="20px;" style="text-align:center;">'
+										+ bookList[i].bookIdx + '</td>';
 								bookListSection += '<td>'
 										+ bookList[i].bookISBN + '</td>';
-								bookListSection += '<td class="showImg" width="130px;" style="text-align:center;"><img src="${pageContext.request.contextPath}/resources/bookImages/'+bookList[i].bookImg+'" style="width:100px; height:150px;"/></td>';
+								bookListSection += '<td class="showImg" width="130px;" style="text-align:center;"><img src="${pageContext.request.contextPath}/resources/bookImages/'+bookList[i].bookImg+'" style="width:100px; height:150px;"/><button type="button" class="btn btn-warning btn-block mt-1" data-toggle="modal" data-target="#updateImg" onclick="updateImg('+bookList[i].bookIdx+',\''+bookList[i].bookImg+'\')">변 경</button></td>';
 								bookListSection += '<td>'
 										+ bookList[i].bookName + '</td>';
 								bookListSection += '<td>'
@@ -316,7 +379,9 @@
 								if (bookList[i].bookStatus == 0)
 									status = "대출 불가";
 								bookListSection += '<td>' + status + '</td>';
-								bookListSection += '<td width="120px;" style="text-align:center;"><button type="button" class="btn btn-primary" onclick="readBook('+bookList[i].bookIdx+')">상세 보기</button></td>';
+								bookListSection += '<td width="120px;" style="text-align:center;"><button type="button" class="btn btn-primary" onclick="readBook('
+										+ bookList[i].bookIdx
+										+ ')">상세 보기</button></td>';
 								bookListSection += "</tr>";
 							}
 
@@ -344,6 +409,24 @@
 					});
 		}
 
+		function updateImg(idx,img)
+		{
+			$("#inputUpdateIdx").val(idx);
+			$("#imgUpdateImg").attr("src","${pageContext.request.contextPath}/resources/bookImages/"+img);
+			$("#originFileName").val(img);
+		}
+		
+		// 이미지 미리보기
+		function readURL(input, area) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					document.getElementById(area).src = e.target.result;
+				};
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+		
 		window.onload = function() {
 			loadBookList(0);
 		}

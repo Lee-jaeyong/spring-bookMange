@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import bookManage.l.pjt.DAO.CategoryDAO;
 import bookManage.l.pjt.ajaxController.CategoryController;
-import bookManage.l.pjt.category.service.CategorySelectService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:database-context.xml")
@@ -32,10 +31,10 @@ public class CategoryTest {
 	}
 
 	@Test
-	public void selectCategory() throws Exception{
+	public void selectCategory() throws Exception {
 		System.out.println(new ObjectMapper().writeValueAsString(categoryDAO.selectCategory()));
 	}
-	
+
 	@Test
 	@Ignore
 	public void addCategory() throws Exception {

@@ -6,14 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import bookManage.l.pjt.page.model.AddBookImplAction;
-import bookManage.l.pjt.page.model.BookListImplAction;
+import bookManage.l.pjt.page.model.SelectCategoryAndPublisher;
+import bookManage.l.pjt.service.BookService;
 
 @Controller
 public class AdminPageController {
@@ -21,10 +22,10 @@ public class AdminPageController {
 	private static final Logger logger = LoggerFactory.getLogger(AdminPageController.class);
 
 	@Autowired
-	BookListImplAction bookListImplAction;
+	SelectCategoryAndPublisher selectCategoryAndPublisher;
 
 	@Autowired
-	AddBookImplAction addBookImplAction;
+	BookService bookService;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(HttpServletRequest request) {
@@ -34,17 +35,17 @@ public class AdminPageController {
 
 	@RequestMapping(value = "/bookList", method = RequestMethod.GET)
 	public ModelAndView bookList() {
-		return bookListImplAction.execute();
+		return selectCategoryAndPublisher.selectCategoryAndPublisher("backend/bookList");
 	}
 
 	@RequestMapping(value = "/bookAddForm", method = RequestMethod.GET)
 	public ModelAndView bookAddForm() {
-		return addBookImplAction.execute();
+		return selectCategoryAndPublisher.selectCategoryAndPublisher("backend/bookAdd");
 	}
 
 	@RequestMapping(value = "/categoryAndPublisherNonSelect", method = RequestMethod.GET)
-	public String categoryAndPublisherNonSelect() {
-		return "backend/categoryAndPublisherNonSelect";
+	public ModelAndView categoryAndPublisherNonSelect() {
+		return selectCategoryAndPublisher.selectCategoryAndPublisher("backend/categoryAndPublisherNonSelect");
 	}
 
 	@RequestMapping(value = "/lendApplyManage", method = RequestMethod.GET)
@@ -92,8 +93,10 @@ public class AdminPageController {
 		return "backend/QandAList";
 	}
 
-	@GetMapping(value = "/selectBook")
-	public ModelAndView readBookInfo(@RequestParam("idx") String idx) {
-		return addBookImplAction.execute(idx);
+	@PostMapping(value = "/selectBook")
+	public ModelAndView readBookInfo(Model model, @RequestParam(value = "idx", required = true) String idx) {
+		model.addAttribute("book", bookService.selectBookInfo(idx));
+		return selectCategoryAndPublisher.selectCategoryAndPublisher("backend/bookAdd");
 	}
+
 }

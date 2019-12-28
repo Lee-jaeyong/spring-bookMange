@@ -28,4 +28,15 @@
 		lpjt_category
 		WHERE categoryIdx = #{categoryIdx}
 	</delete>
+	
+	<delete id="deleteCategoryRelation" parameterType="hashMap">
+		DELETE FROM lpjt_relationcategory
+		WHERE categoryIdx = #{categoryIdx}
+	</delete>
+	
+	<update id="updateCategoryFromBook" parameterType="hashmap">
+		UPDATE lpjt_relationcategory
+		SET categoryIdx = #{categoryIdx}
+		WHERE bookIdx = #{bookIdx}
+	</update>
 </mapper>

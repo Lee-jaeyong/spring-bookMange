@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import bookManage.l.pjt.domain.Publisher;
-import bookManage.l.pjt.publisher.service.PublisherDeleteService;
-import bookManage.l.pjt.publisher.service.PublisherInsertService;
-import bookManage.l.pjt.publisher.service.PublisherSelectService;
-import bookManage.l.pjt.publisher.service.PublisherUpdateService;
+import bookManage.l.pjt.service.PublisherService;
 
 @RestController
 @RequestMapping(value = "publisher")
@@ -30,16 +27,7 @@ public class PublisherController {
 	private static Logger logger = LoggerFactory.getLogger(PublisherController.class);
 
 	@Autowired
-	PublisherInsertService publisherInsertService;
-
-	@Autowired
-	PublisherSelectService publisherSelectService;
-
-	@Autowired
-	PublisherUpdateService publisherUpdateService;
-
-	@Autowired
-	PublisherDeleteService publisherDeleteService;
+	PublisherService publisherService;
 
 	@Autowired
 	ObjectMapper objMapper;
@@ -53,7 +41,7 @@ public class PublisherController {
 				return errorIndex.getDefaultMessage();
 			}
 		}
-		publisherInsertService.insertPublisher(publisher);
+		publisherService.insertPublisher(publisher);
 		return "출판사가 등록되었습니다.";
 	}
 
@@ -66,18 +54,18 @@ public class PublisherController {
 				return errorIndex.getDefaultMessage();
 			}
 		}
-		publisherUpdateService.updatePublisher(publisher);
+		publisherService.updatePublisher(publisher);
 		return "출판사가 수정되었습니다.";
 	}
 
 	@GetMapping(value = "/deletePublisher", produces = "text/plain;charset=UTF-8")
 	public String deletePublisher(Publisher publisher) {
-		publisherDeleteService.deletePublisher(publisher);
+		publisherService.deletePublisher(publisher);
 		return "출판사가 정상적으로 삭제되었습니다.";
 	}
 
 	@GetMapping(value = "/selectPublisher", produces = "text/plain;charset=UTF-8")
 	public String selectPublisher() throws JsonGenerationException, JsonMappingException, IOException {
-		return objMapper.writeValueAsString(publisherSelectService.selectPublisher());
+		return objMapper.writeValueAsString(publisherService.selectPublisher());
 	}
 }

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@include file="include/head.jsp"%>
 <body id="page-top">
 
@@ -29,10 +30,9 @@
 									<tr>
 										<td>
 											<div class="col-lg-5">
-												<select class="form-control text-center" id="sel1"
-													name="sellist1">
-													<option>출판사</option>
-													<option>분 류</option>
+												<select class="form-control text-center" id="choose">
+													<option value="0">출판사</option>
+													<option value="1">분 류</option>
 												</select>
 											</div>
 										</td>
@@ -45,12 +45,26 @@
 									</tr>
 									<tr>
 										<td>
-											<div class="row">
+											<div class="row" id="publisherArea">
 												<div class="col-lg-4">
-													<select class="form-control text-center" id="sel1"
-														name="sellist1">
-														<option>출판사</option>
-														<option>분 류</option>
+													<select class="form-control text-center"
+														id="selectCategory">
+														<c:forEach items="${category}" var="item">
+															<option value="${item.categoryIdx}">${item.categoryName}</option>
+														</c:forEach>
+													</select>
+												</div>
+												<div class="col-lg-4">
+													<button type="button" class="btn btn-success">일괄
+														저장</button>
+												</div>
+											</div>
+											<div class="row" id="categoryArea">
+												<div class="col-lg-4">
+													<select class="form-control text-center" id="selectPublisher">
+														<c:forEach items="${publisher}" var="item">
+															<option value="${item.publisherIdx}">${item.publisherName}</option>
+														</c:forEach>
 													</select>
 												</div>
 												<div class="col-lg-4">
@@ -97,42 +111,7 @@
 											<th></th>
 										</tr>
 									</thead>
-									<tr>
-										<td></td>
-										<td>Developer</td>
-										<td>San Francisco</td>
-										<td>30</td>
-										<td>2010/07/14</td>
-										<td>$86,500</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td>Shad Decker</td>
-										<td>Regional Director</td>
-										<td>51</td>
-										<td>2008/11/13</td>
-										<td>$183,000</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td>Michael Bruce</td>
-										<td>Javascript Developer</td>
-										<td>29</td>
-										<td>2011/06/27</td>
-										<td>$183,000</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td></td>
-										<td>Donna Snider</td>
-										<td>Customer Support</td>
-										<td>27</td>
-										<td>2011/01/25</td>
-										<td>$112,000</td>
-										<td></td>
-									</tr>
+									<tbody>
 									</tbody>
 								</table>
 							</div>
@@ -155,6 +134,21 @@
 
 	<%@include file="include/scrollButton.jsp"%>
 	<%@include file="include/script.jsp"%>
+	<script>
+		$(document).ready(function() {
+			$("#categoryArea").show();
+			$("#publisherArea").hide();
+			$("#choose").change(function() {
+				if ($(this).val() === '1') {
+					$("#categoryArea").hide();
+					$("#publisherArea").show();
+				} else {
+					$("#categoryArea").show();
+					$("#publisherArea").hide();
+				}
+			});
+		});
+	</script>
 </body>
 
 </html>

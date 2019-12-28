@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bookManage.l.pjt.DAO.BookDAO">
-	<select id="selectBookInfo" parameterType="string" resultType="bookManage.l.pjt.domain.Book">
-		SELECT *
+	
+	<select id="selectNonPublisher" parameterType="hashMap">
+		SELECT bookIdx,bookISBN,bookName,bookStock,bookStatus
 		FROM lpjt_book
-		WHERE bookIdx = #{idx}
+		WHERE lpjt_book.bookidx NOT IN (SELECT lpjt_relationpublisher.bookIdx FROM lpjt_relationpublisher)
+	</select>
+	
+	<select id="selectNonCategory" parameterType="hashMap">
+		SELECT bookIdx,bookISBN,bookName,bookStock,bookStatus
+		FROM lpjt_book
+		WHERE lpjt_book.bookidx NOT IN (SELECT lpjt_relationcategory.bookIdx FROM lpjt_relationcategory)
+	</select>
+	
+	<select id="selectBookInfo" parameterType="string" resultType="bookManage.l.pjt.domain.Book">
+		SELECT *,lpjt_relationcategory.categoryIdx,lpjt_relationpublisher.publisherIdx
+		FROM lpjt_book,lpjt_relationpublisher,lpjt_relationcategory
+		WHERE lpjt_book.bookIdx = lpjt_relationpublisher.bookIdx AND lpjt_book.bookIdx = lpjt_relationcategory.bookIdx
+		AND lpjt_book.bookIdx = #{idx}
 	</select>
 	
 	<select id="excelFileUpload" parameterType="hashmap" resultType="hashMap">
@@ -60,6 +74,27 @@
 	<insert id="insertBook" parameterType="hashMap">
 		INSERT INTO lpjt_book
 		VALUES
-		(NULL,#{isbn},#{bookName},#{bookStock},#{bookPrice},#{bookContent},#{bookBuyType},#{bookImg},#{bookStatus},#{bookAuthor},#{bookDetailContent},#{bookCountry})
+		(NULL,#{isbn},#{bookName},#{bookStock},#{bookPrice},#{bookContent},#{bookBuyType},#{bookImg},#{bookStatus},#{bookAuthor},#{bookDetailContent},#{bookCountry},left(NOW(),10))
 	</insert>
+	
+	<update id="updateBook" parameterType="hashMap">
+		UPDATE lpjt_book
+		SET bookISBN = #{isbn}
+		,bookName = #{bookName}
+		,bookStock = #{bookStock}
+		,bookPrice = #{bookPrice}
+		,bookContent = #{bookContent}
+		,bookBuyType = #{bookBuyType}
+		,bookStatus = #{bookStatus}
+		,bookAuthor = #{bookAuthor}
+		,bookDetailContent = #{bookDetailContent}
+		,bookCountry = #{bookCountry}
+		WHERE bookidx = #{bookIdx}
+	</update>
+	
+	<update id="updateBookImg" parameterType="hashMap">
+		UPDATE lpjt_book
+		SET bookImg = #{bookImg}
+		WHERE bookidx = #{bookIdx}
+	</update>
 </mapper>

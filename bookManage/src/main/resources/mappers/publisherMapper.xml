@@ -29,4 +29,15 @@
 		lpjt_publisher
 		WHERE publisherIdx = #{publisherIdx}
 	</delete>
+	
+	<delete id="deletePublisherRelation" parameterType="hashMap">
+		DELETE FROM lpjt_relationpublisher
+		WHERE publisherIdx = #{publisher}
+	</delete>
+	
+	<update id="updatePublisherFromBook" parameterType="hashmap">
+		UPDATE lpjt_relationPublisher
+		SET publisherIdx = #{publisherIdx}
+		WHERE bookIdx = #{bookIdx}
+	</update>
 </mapper>
