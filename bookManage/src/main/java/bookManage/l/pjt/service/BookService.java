@@ -8,7 +8,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +26,8 @@ import bookManage.l.pjt.requestCommand.BookListRequest;
 @Service
 public class BookService {
 
+	Logger log = LoggerFactory.getLogger(BookService.class);
+
 	@Autowired
 	ObjectMapper objectMapper;
 
@@ -33,6 +39,32 @@ public class BookService {
 
 	@Autowired
 	PublisherDAO publisherDAO;
+
+	public String selectBookListNonPublisherOrCategory(String showCase, int pageNum)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		int startBlock = pageNum / 10 * 10;
+		int endBlock = startBlock + 10;
+		int totalBlock = 0;
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (showCase.equals("publisher")) {
+			totalBlock = (int) Math.ceil(bookDAO.selectNonPublisherCount() / 10.0);
+			if (endBlock > totalBlock)
+				endBlock = totalBlock;
+			map.put("pageNum", pageNum * 10);
+			result.put("result", bookDAO.selectNonPublisher(map));
+		} else {
+			totalBlock = (int) Math.ceil(bookDAO.selectNonCategoryCount() / 10.0);
+			if (endBlock > totalBlock)
+				endBlock = totalBlock;
+			map.put("pageNum", pageNum * 10);
+			result.put("result", bookDAO.selectNonCategory(map));
+		}
+		result.put("startBlock", startBlock);
+		result.put("endBlock", endBlock);
+		result.put("totalBlock", totalBlock);
+		return objectMapper.writeValueAsString(result);
+	}
 
 	public void updateBookImg(Book book, MultipartFile bookImg, String originFileName, HttpServletRequest request) {
 		String imagePath = request.getRealPath("resources/bookImages");

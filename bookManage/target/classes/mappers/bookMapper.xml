@@ -2,16 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bookManage.l.pjt.DAO.BookDAO">
 	
-	<select id="selectNonPublisher" parameterType="hashMap">
-		SELECT bookIdx,bookISBN,bookName,bookStock,bookStatus
+	<select id="selectNonPublisherCount" resultType="int">
+		SELECT COUNT(bookIdx)
 		FROM lpjt_book
 		WHERE lpjt_book.bookidx NOT IN (SELECT lpjt_relationpublisher.bookIdx FROM lpjt_relationpublisher)
 	</select>
 	
-	<select id="selectNonCategory" parameterType="hashMap">
+	<select id="selectNonCategoryCount" resultType="int">
+		SELECT COUNT(bookIdx)
+		FROM lpjt_book
+		WHERE lpjt_book.bookidx NOT IN (SELECT lpjt_relationcategory.bookIdx FROM lpjt_relationcategory)
+		LIMIT #{pageNum},10
+	</select>
+	
+	<select id="selectNonPublisher" parameterType="hashMap" resultType="hashMap">
+		SELECT bookIdx,bookISBN,bookName,bookStock,bookStatus
+		FROM lpjt_book
+		WHERE lpjt_book.bookidx NOT IN (SELECT lpjt_relationpublisher.bookIdx FROM lpjt_relationpublisher)
+		LIMIT #{pageNum},10
+	</select>
+	
+	<select id="selectNonCategory" parameterType="hashMap" resultType="hashMap">
 		SELECT bookIdx,bookISBN,bookName,bookStock,bookStatus
 		FROM lpjt_book
 		WHERE lpjt_book.bookidx NOT IN (SELECT lpjt_relationcategory.bookIdx FROM lpjt_relationcategory)
+		LIMIT #{pageNum},10
 	</select>
 	
 	<select id="selectBookInfo" parameterType="string" resultType="bookManage.l.pjt.domain.Book">

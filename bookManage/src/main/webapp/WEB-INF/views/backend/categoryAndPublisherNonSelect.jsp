@@ -31,8 +31,8 @@
 										<td>
 											<div class="col-lg-5">
 												<select class="form-control text-center" id="choose">
-													<option value="0">출판사</option>
-													<option value="1">분 류</option>
+													<option value="publisher">출판사</option>
+													<option value="category">분 류</option>
 												</select>
 											</div>
 										</td>
@@ -111,7 +111,7 @@
 											<th></th>
 										</tr>
 									</thead>
-									<tbody>
+									<tbody id="bookSection">
 									</tbody>
 								</table>
 							</div>
@@ -131,7 +131,6 @@
 
 	</div>
 	<!-- End of Page Wrapper -->
-
 	<%@include file="include/scrollButton.jsp"%>
 	<%@include file="include/script.jsp"%>
 	<script>
@@ -139,15 +138,48 @@
 			$("#categoryArea").show();
 			$("#publisherArea").hide();
 			$("#choose").change(function() {
-				if ($(this).val() === '1') {
+				if ($(this).val() === 'publisher') {
 					$("#categoryArea").hide();
 					$("#publisherArea").show();
 				} else {
 					$("#categoryArea").show();
 					$("#publisherArea").hide();
 				}
+				loadBookListNonCategoryOrPublisher(0);
 			});
 		});
+		
+		function loadBookListNonCategoryOrPublisher(pageNum){
+			$.ajax({
+				url :"./bookList/selectBookListNonPublisherOrCategory",
+				data :{
+					showCase : $("#choose").val(),
+					pageNum : pageNum
+				},
+				dataType : "json",
+				success : function(data){
+					var bookSection = '';
+					var startBlock = data.startBlock;
+					var endBlock = data.endBlock;
+					var totalBlock = data.totalBlock;
+					var bookList = data.result;
+					for(var i =0;i<bookList.length;i++)
+					{
+						bookSection += '<tr>';
+						bookSection += '<td></td>';
+						bookSection += '<td>'+bookList[i].bookIdx+'</td>';
+						bookSection += '<td>'+bookList[i].bookISBN+'</td>';
+						bookSection += '<td>'+bookList[i].bookName+'</td>';
+						bookSection += '<td>'+bookList[i].bookStock+'</td>';
+						bookSection += '<td>'+bookList[i].bookStatus+'</td>';
+						bookSection += '<td></td>';
+						bookSection += '</tr>';
+					}
+					$("#bookSection").html(bookSection);
+				}
+			});
+		}
+		window.onload = loadBookListNonCategoryOrPublisher(0);
 	</script>
 </body>
 

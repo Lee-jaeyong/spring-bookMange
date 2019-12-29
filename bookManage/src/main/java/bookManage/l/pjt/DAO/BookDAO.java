@@ -11,7 +11,11 @@ public interface BookDAO {
 	public List<Map<String, String>> selectNonPublisher(Map<String, Object> map);
 
 	public List<Map<String, String>> selectNonCategory(Map<String, Object> map);
-	
+
+	public int selectNonCategoryCount();
+
+	public int selectNonPublisherCount();
+
 	public String selectNowInsertBookIdx();
 
 	public List<Map<String, String>> selectBookList(Map<String, Object> map);
